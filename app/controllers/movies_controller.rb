@@ -28,7 +28,7 @@ class MoviesController < ApplicationController
     
     case sort
       when "title"
-        if not @ratings.nil? then
+        if not @ratings.empty? then
           @movies = Movie.find_all_by_rating(@ratings, :order => "title")
         else
           @movies = Movie.all(:order => "title")
@@ -36,7 +36,7 @@ class MoviesController < ApplicationController
         @hiliteA = "hilite"
         @hiliteB = ""
       when "release_date"
-        if not @ratings.nil? then
+        if not @ratings.empty? then
           @movies = Movie.find_all_by_rating(@ratings, :order => "release_date")
         else
           @movies = Movie.all(:order => "release_date")
@@ -44,7 +44,7 @@ class MoviesController < ApplicationController
         @hiliteA = ""
         @hiliteB = "hilite"
       else
-        if not @ratings.nil? then
+        if not @ratings.empty? then
           @movies = Movie.find_all_by_rating(@ratings)
         else
           @movies = Movie.all
