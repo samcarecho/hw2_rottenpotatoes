@@ -7,21 +7,52 @@ class MoviesController < ApplicationController
   end
 
   def index
+  
+    @all_ratings = Movie.ratings
+    #find_all_by_rating
+    
+    @ratings = params[:ratings]
+    if not @ratings.nil? then
+      @ratings = @ratings.keys
+      session[:ratings] = @ratings
+    else
+      if not session[:ratings].nil? then
+        @ratings = session[:ratings]
+        #@ratings = @ratings.keys
+        @session_ratings = session[:ratings]
+      end
+    end
+    
     sort = params[:sort]
+    
     case sort
       when "title"
-        @movies = Movie.all(:order => "title")
+        if not @ratings.nil? then
+          @movies = Movie.find_all_by_rating(@ratings, :order => "title")
+        else
+          @movies = Movie.all(:order => "title")
+        end
         @hiliteA = "hilite"
         @hiliteB = ""
       when "release_date"
-        @movies = Movie.all(:order => "release_date")
+        if not @ratings.nil? then
+          @movies = Movie.find_all_by_rating(@ratings, :order => "release_date")
+        else
+          @movies = Movie.all(:order => "release_date")
+        end
         @hiliteA = ""
         @hiliteB = "hilite"
       else
-        @movies = Movie.all
+        if not @ratings.nil? then
+          @movies = Movie.find_all_by_rating(@ratings)
+        else
+          @movies = Movie.all
+        end
         @hiliteA = ""
         @hiliteB = ""
     end  
+    
+    
   end
 
   def new
