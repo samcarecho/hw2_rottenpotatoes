@@ -8,25 +8,38 @@ class MoviesController < ApplicationController
 
   def index
   
-    @all_ratings = Movie.ratings
-    #find_all_by_rating
+    @all_ratings  = Movie.ratings
+    @redirect     = false
+    @ratings      = params[:ratings]
+    @sort         = params[:sort]
     
-    @ratings = params[:ratings]
     if not @ratings.nil? then
-      @ratings = @ratings.keys
+      if @ratings.is_a?(Hash) then
+        @ratings = @ratings.keys
+      end
       session[:ratings] = @ratings
     else
       @ratings = []
       if not session[:ratings].nil? then
         @ratings = session[:ratings]
-        #@ratings = @ratings.keys
-        @session_ratings = session[:ratings]
+        @redirect = true
       end
     end
     
-    sort = params[:sort]
+    if @sort.nil? then
+      if not session[:sort].nil? then
+        @redirect = true
+        @sort = session[:sort]
+      end
+    else
+      session[:sort] = @sort
+    end
     
-    case sort
+    if @redirect then
+      redirect_to :action=> "index", :ratings => @ratings, :sort => @sort
+    end
+    
+    case @sort
       when "title"
         if not @ratings.empty? then
           @movies = Movie.find_all_by_rating(@ratings, :order => "title")
