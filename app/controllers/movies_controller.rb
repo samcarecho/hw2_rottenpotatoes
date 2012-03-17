@@ -16,6 +16,7 @@ class MoviesController < ApplicationController
       @ratings = @ratings.keys
       session[:ratings] = @ratings
     else
+      @ratings = []
       if not session[:ratings].nil? then
         @ratings = session[:ratings]
         #@ratings = @ratings.keys
